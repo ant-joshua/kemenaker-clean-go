@@ -3,12 +3,12 @@ package kafka
 type CustomKafka struct {
 }
 
-func (c CustomKafka) PublishMessage() {
+func (c *CustomKafka) PublishMessage() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c CustomKafka) SubscribeMessage() {
+func (c *CustomKafka) SubscribeMessage() {
 	//TODO implement me
 	panic("implement me")
 }

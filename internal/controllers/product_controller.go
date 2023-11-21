@@ -24,15 +24,12 @@ func (p ProductHttpControllerImpl) GetAllProduct(ctx echo.Context) error {
 
 	//validate := validator.New(validator.WithRequiredStructEnabled())
 	filterRequest := new(domains.GetAllProductFilter)
-	response := new(commons.CustomResponse)
+	//response := new(commons.CustomResponse)
 
 	if err := ctx.Bind(filterRequest); err != nil {
 		//var error map[string]interface{}
 
-		return response.BadRequest(ctx, map[string]interface{}{
-			"page":  "is required",
-			"limit": "is required",
-		})
+		return commons.NewBadRequestResponse(ctx, err)
 	}
 
 	//if err := validate.Struct(filterRequest); err != nil {
@@ -50,11 +47,7 @@ func (p ProductHttpControllerImpl) GetAllProduct(ctx echo.Context) error {
 		})
 	}
 
-	props := new(commons.SuccessResponseProps)
-
-	props.Data = products
-
-	return response.Success(ctx, *props)
+	return commons.NewSuccessResponse[[]domains.Product](ctx, "Success Get Product", &products, nil)
 
 }
 
@@ -66,22 +59,17 @@ func (p ProductHttpControllerImpl) GetProductById(ctx echo.Context) error {
 func (p ProductHttpControllerImpl) CreateProduct(ctx echo.Context) error {
 	createRequest := new(domains.CreateProductRequest)
 
-	response := new(commons.CustomResponse)
-
 	if err := ctx.Bind(createRequest); err != nil {
-		return response.BadRequest(ctx, map[string]interface{}{})
+		return commons.NewBadRequestResponse(ctx, err)
 	}
 
 	product, err := p.service.CreateProduct(*createRequest)
 
 	if err != nil {
-		return response.BadRequest(ctx, map[string]interface{}{})
+		return commons.NewErrorResponse(ctx, "Success", 400, nil)
 	}
 
-	props := new(commons.SuccessResponseProps)
-	props.Data = product
-
-	return response.Success(ctx, *props)
+	return commons.NewSuccessResponse[domains.Product](ctx, "Success Get Product", product, nil)
 
 }
 

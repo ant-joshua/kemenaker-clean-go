@@ -38,12 +38,12 @@ func (p ProductServiceImpl) GetAllProduct(filter domains.GetAllProductFilter) ([
 
 }
 
-func (p ProductServiceImpl) GetProductById(id int) (domains.Product, error) {
+func (p ProductServiceImpl) GetProductById(id int) (*domains.Product, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p ProductServiceImpl) CreateProduct(request domains.CreateProductRequest) (domains.Product, error) {
+func (p ProductServiceImpl) CreateProduct(request domains.CreateProductRequest) (*domains.Product, error) {
 
 	var newProduct domains.Product
 
@@ -57,27 +57,15 @@ func (p ProductServiceImpl) CreateProduct(request domains.CreateProductRequest) 
 
 		fmt.Printf("error db %v", err)
 
-		return domains.Product{
-			ID:          0,
-			Name:        "",
-			Price:       0,
-			Description: "",
-			//Categories:  nil,
-		}, err
+		return nil, err
 	}
 
 	p.kafka.PublishMessage()
 
-	return domains.Product{
-		ID:          0,
-		Name:        "",
-		Price:       0,
-		Description: "",
-		//Categories:  nil,
-	}, nil
+	return &newProduct, nil
 }
 
-func (p ProductServiceImpl) UpdateProduct(request domains.UpdateProductRequest) (domains.Product, error) {
+func (p ProductServiceImpl) UpdateProduct(request domains.UpdateProductRequest) (*domains.Product, error) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -89,9 +77,9 @@ func (p ProductServiceImpl) DeleteProducts(ids []int) error {
 
 type ProductService interface {
 	GetAllProduct(filter domains.GetAllProductFilter) ([]domains.Product, error)
-	GetProductById(id int) (domains.Product, error)
-	CreateProduct(request domains.CreateProductRequest) (domains.Product, error)
-	UpdateProduct(request domains.UpdateProductRequest) (domains.Product, error)
+	GetProductById(id int) (*domains.Product, error)
+	CreateProduct(request domains.CreateProductRequest) (*domains.Product, error)
+	UpdateProduct(request domains.UpdateProductRequest) (*domains.Product, error)
 	DeleteProducts(ids []int) error
 }
 
